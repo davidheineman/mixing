@@ -34,4 +34,24 @@ Number of train/val tokens: 500,000,000 / 921,314
 Number of train/val tokens: 330,081,134 / 921,314
 (religion) Mutual information: -37,547 bytes
 Number of train/val tokens: 428,305,430 / 921,314
+(literature) Mutual information: -18,359 bytes
+Number of train/val tokens: 232,045,571 / 921,314
+(social_life) Mutual information: 6,724 bytes
+Number of train/val tokens: 197,532,174 / 921,314
+(sports_and_fitness) Mutual information: -20,757 bytes
+Number of train/val tokens: 357,716,039 / 921,314
+(finance_and_business) Mutual information: -3,631 bytes
+Number of train/val tokens: 54,492,199 / 921,314
+(fashion_and_beauty) Mutual information: -1,237 bytes
+Number of train/val tokens: 259,125,824 / 921,314
+(software_development) Mutual information: -47,878 bytes
+Number of train/val tokens: 200,624,311 / 921,314
+(crime_and_law) Mutual information: -17,912 bytes
+Number of train/val tokens: 64,895,082 / 921,314
+(industrial) Mutual information: -1,178 bytes
+Number of train/val tokens: 190,436,323 / 921,314
+(education_and_jobs) Mutual information: 22,586 bytes
+Number of train/val tokens: 100,976,302 / 921,314
+(food_and_dining) Mutual information: 8,308 bytes
+Number of train/val tokens: 456,434,207 / 921,314
 ```

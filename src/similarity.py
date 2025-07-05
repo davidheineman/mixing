@@ -58,7 +58,8 @@ def main():
         train_toks = np.memmap(data_path, mode="r", dtype=dtype)
 
         # truncate train toks
-        train_toks = train_toks[:500_000_000]
+        # train_toks = train_toks[:500_000_000]
+        train_toks = train_toks[:10_000_000]
 
         print(f"Number of train/val tokens: {len(train_toks):,} / {len(val_toks):,}")
 
@@ -67,7 +68,7 @@ def main():
         concat_size = compress_array_as_bytes(np.concatenate([val_toks, train_toks]))
         rev_concat_size = compress_array_as_bytes(np.concatenate([train_toks, val_toks]))
 
-        # mutual_info = val_toks_size + train_toks_size - concat_size
+        mutual_info = val_toks_size + train_toks_size - concat_size
 
         # mutual_info = 0.5 * (
         #     (val_toks_size + train_toks_size - concat_size) +
@@ -81,7 +82,7 @@ def main():
         # mutual_info = (concat_size - min_size) / max_size
 
         # \text{Info}(X \rightarrow Y) \approx C(Y) - \left[C(X \Vert Y) - C(X)\right]
-        mutual_info = train_toks_size - (concat_size - val_toks_size) 
+        # mutual_info = train_toks_size - (concat_size - val_toks_size)
 
         print(f"({subset}) Mutual information: {mutual_info:,} bytes")
 
