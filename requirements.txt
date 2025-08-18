@@ -1,0 +1,8 @@
+ipykernel
+ipywidgets
+transformers
+torch
+blosc
+datasets
+rich
+lz4
