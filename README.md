@@ -22,40 +22,42 @@ scp ai2:/oe-training-default/ai2-llm/preprocessed/dclm/baseline_topic_classified
 # Basic version of MMI
 python src/similarity.py
 
-# Fast version of MMI with fancy compression
+# Fast version of MMI (fast, string-based compressor)
 python src/similarity_fast.py
 ```
 
 ### example output
 
+Idk... (1) MI shouldn't be negative (2) this domain overlap doesnt make sense...
+
 ```sh
-          mutual information via consistent Zstd streaming (symmetric)          
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
-┃ Subset                      ┃ Train Tokens ┃ Val Tokens ┃ Mutual Information ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
-│ software                    │   50,000,000 │  3,616,639 │       38,809 bytes │
-│ science_math_and_technology │   50,000,000 │  3,616,639 │       44,083 bytes │
-│ art_and_design              │   50,000,000 │  3,616,639 │       45,386 bytes │
-│ entertainment               │   50,000,000 │  3,616,639 │       37,990 bytes │
-│ transportation              │   50,000,000 │  3,616,639 │       34,371 bytes │
-│ games                       │   50,000,000 │  3,616,639 │       43,045 bytes │
-│ politics                    │   50,000,000 │  3,616,639 │       35,352 bytes │
-│ literature                  │   50,000,000 │  3,616,639 │       34,649 bytes │
-│ religion                    │   50,000,000 │  3,616,639 │       34,438 bytes │
-│ social_life                 │   50,000,000 │  3,616,639 │       36,078 bytes │
-│ software_development        │   50,000,000 │  3,616,639 │       46,038 bytes │
-│ sports_and_fitness          │   50,000,000 │  3,616,639 │       38,065 bytes │
-│ finance_and_business        │   50,000,000 │  3,616,639 │       38,434 bytes │
-│ fashion_and_beauty          │   50,000,000 │  3,616,639 │       28,918 bytes │
-│ crime_and_law               │   50,000,000 │  3,616,639 │       36,154 bytes │
-│ industrial                  │   50,000,000 │  3,616,639 │       38,365 bytes │
-│ education_and_jobs          │   50,000,000 │  3,616,639 │       39,716 bytes │
-│ health                      │   50,000,000 │  3,616,639 │       32,564 bytes │
-│ history_and_geography       │   50,000,000 │  3,616,639 │       46,624 bytes │
-│ food_and_dining             │   50,000,000 │  3,616,639 │       33,240 bytes │
-│ travel_and_tourism          │   50,000,000 │  3,616,639 │       35,289 bytes │
-│ home_and_hobbies            │   50,000,000 │  3,616,639 │       34,887 bytes │
-│ electronics_and_hardware    │   50,000,000 │  3,616,639 │       37,471 bytes │
-│ adult_content               │   50,000,000 │  3,616,639 │       23,626 bytes │
-└─────────────────────────────┴──────────────┴────────────┴────────────────────┘
+        mutual information via Zstd compression of raw text (symmetric)         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃ Subset                      ┃ Train Bytes ┃   Val Bytes ┃ Mutual Information ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ travel_and_tourism          │ 222,913,859 │ 603,088,059 │        7,610 bytes │
+│ social_life                 │ 218,662,670 │ 603,088,059 │        4,179 bytes │
+│ industrial                  │ 241,199,404 │ 603,088,059 │        3,621 bytes │
+│ education_and_jobs          │ 236,920,952 │ 603,088,059 │        3,445 bytes │
+│ sports_and_fitness          │ 218,989,535 │ 603,088,059 │        2,999 bytes │
+│ health                      │ 231,743,763 │ 603,088,059 │        2,027 bytes │
+│ software_development        │ 219,866,444 │ 603,088,059 │        1,682 bytes │
+│ games                       │ 217,588,162 │ 603,088,059 │        1,528 bytes │
+│ science_math_and_technology │ 228,297,372 │ 603,088,059 │       -1,329 bytes │
+│ religion                    │ 222,342,935 │ 603,088,059 │       -1,356 bytes │
+│ software                    │ 229,289,903 │ 603,088,059 │       -1,641 bytes │
+│ politics                    │ 236,777,490 │ 603,088,059 │       -2,092 bytes │
+│ fashion_and_beauty          │ 220,674,926 │ 603,088,059 │       -2,463 bytes │
+│ finance_and_business        │ 239,689,390 │ 603,088,059 │       -2,544 bytes │
+│ electronics_and_hardware    │ 221,618,107 │ 603,088,059 │       -3,021 bytes │
+│ literature                  │ 219,214,944 │ 603,088,059 │       -4,185 bytes │
+│ history_and_geography       │ 222,219,903 │ 603,088,059 │       -5,701 bytes │
+│ entertainment               │ 217,478,640 │ 603,088,059 │       -5,979 bytes │
+│ art_and_design              │ 226,565,500 │ 603,088,059 │       -6,327 bytes │
+│ adult_content               │ 220,576,577 │ 603,088,059 │       -6,341 bytes │
+│ home_and_hobbies            │ 224,875,119 │ 603,088,059 │       -9,642 bytes │
+│ transportation              │ 227,112,073 │ 603,088,059 │      -11,811 bytes │
+│ crime_and_law               │ 236,116,286 │ 603,088,059 │      -13,083 bytes │
+│ food_and_dining             │ 217,289,397 │ 603,088,059 │      -18,434 bytes │
+└─────────────────────────────┴─────────────┴─────────────┴────────────────────┘
 ```

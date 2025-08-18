@@ -6,3 +6,4 @@ blosc
 datasets
 rich
 lz4
+zstandard
