@@ -2,7 +2,7 @@
 git clone https://github.com/allenai/olmo-cookbook
 git checkout mayeec/core-2-test-2
 pip install -e ".[all]"
-pip install ipykernel ipywidgets transformers torch
+pip install ipykernel ipywidgets transformers torch blosc
 
 # List data
 ai2 ls /oe-training-default/ai2-llm/preprocessed/dclm/baseline_topic_classified_sample/adult_content/dolma2-tokenizer
