@@ -10,23 +10,31 @@ import zstandard as zstd
 from functools import partial
 
 
-# TRAIN_TOKENS = 1_000_000
 TRAIN_TOKENS = 50_000_000
+# TRAIN_TOKENS = 50_000_000
 
-# VALIDATION_DOCUMENTS = 10_000
-VALIDATION_DOCUMENTS = 150_000
+VALIDATION_DOCUMENTS = 50_000
+# VALIDATION_DOCUMENTS = 150_000
 
 
 def _zstd_size(text, level=3):
     """Compress a string using zstd and return the compressed size"""
     c = zstd.ZstdCompressor(level=level)
-    return len(c.compress(text.encode('utf-8')))
+    original_size = len(text.encode('utf-8'))
+    compressed = c.compress(text.encode('utf-8'))
+    size = len(compressed)
+    print(f"  Zstd compression: {original_size:,} bytes → {size:,} bytes (ratio: {size/original_size:.3f})")
+    return size
 
 def _zstd_concat_size(texts, level=3):
     """Concatenate strings and compress the result"""
     c = zstd.ZstdCompressor(level=level)
     concatenated = "".join(texts)
-    return len(c.compress(concatenated.encode('utf-8')))
+    original_size = len(concatenated.encode('utf-8'))
+    compressed = c.compress(concatenated.encode('utf-8'))
+    size = len(compressed)
+    print(f"  Zstd concatenation: {original_size:,} bytes → {size:,} bytes (ratio: {size/original_size:.3f})")
+    return size
 
 def get_dirs(path):
     return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
@@ -96,6 +104,11 @@ def process_subset_with_text(args):
     """Process subset using pre-processed text"""
     subset, train_text, val_text, cx_val, level = args
     
+    print(f"\nProcessing subset: {subset}")
+    print(f"  Train text size: {len(train_text.encode('utf-8')):,} bytes")
+    print(f"  Val text size: {len(val_text.encode('utf-8')):,} bytes")
+    print(f"  Val compressed size (cx_val): {cx_val:,} bytes")
+    
     cy = _zstd_size(train_text, level)
     
     # Calculate compressed sizes of concatenations
@@ -106,6 +119,10 @@ def process_subset_with_text(args):
     mi1 = cx_val + cy - cxy
     mi2 = cx_val + cy - cyx
     mi = (mi1 + mi2) // 2
+    
+    print(f"  MI calculation: {cx_val:,} + {cy:,} - {cxy:,} = {mi1:,}")
+    print(f"  MI calculation: {cx_val:,} + {cy:,} - {cyx:,} = {mi2:,}")
+    print(f"  Final MI: {mi:,} bytes")
     
     return subset, len(train_text.encode('utf-8')), mi
 
@@ -163,7 +180,7 @@ def main():
     for subset, ntrain_bytes, mi in results:
         train_mb = ntrain_bytes / (1024 * 1024)
         val_mb = len(val_text.encode('utf-8')) / (1024 * 1024)
-        table.add_row(subset, f"{train_mb:.1f}", f"{val_mb:.1f}", f"{mi:,} bytes")
+        table.add_row(subset, f"{train_mb:.3f}", f"{val_mb:.3f}", f"{mi:,} bytes")
     
     console.print(table)
 

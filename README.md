@@ -28,33 +28,35 @@ python src/similarity_fast.py
 
 ### example output
 
+*Currently, I'm observing negative MIs for >20M tokens.*
+
 ```sh
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
 ┃ Subset                      ┃ Train MB ┃ Val MB ┃ Mutual Information ┃
 ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
-│ science_math_and_technology │      4.2 │   13.9 │        2,654 bytes │
-│ finance_and_business        │      4.6 │   13.9 │        2,549 bytes │
-│ industrial                  │      4.6 │   13.9 │        2,515 bytes │
-│ sports_and_fitness          │      4.2 │   13.9 │        2,459 bytes │
-│ food_and_dining             │      4.1 │   13.9 │        2,405 bytes │
-│ travel_and_tourism          │      4.3 │   13.9 │        2,377 bytes │
-│ literature                  │      4.1 │   13.9 │        2,304 bytes │
-│ home_and_hobbies            │      4.3 │   13.9 │        2,240 bytes │
-│ politics                    │      4.5 │   13.9 │        2,212 bytes │
-│ transportation              │      4.3 │   13.9 │        2,124 bytes │
-│ crime_and_law               │      4.5 │   13.9 │        2,124 bytes │
-│ social_life                 │      4.2 │   13.9 │        2,096 bytes │
-│ electronics_and_hardware    │      4.2 │   13.9 │        2,078 bytes │
-│ entertainment               │      4.1 │   13.9 │        2,048 bytes │
-│ software_development        │      4.2 │   13.9 │        1,920 bytes │
-│ health                      │      4.4 │   13.9 │        1,818 bytes │
-│ software                    │      4.3 │   13.9 │        1,805 bytes │
-│ fashion_and_beauty          │      4.2 │   13.9 │        1,659 bytes │
-│ art_and_design              │      4.3 │   13.9 │        1,560 bytes │
-│ games                       │      4.1 │   13.9 │        1,560 bytes │
-│ history_and_geography       │      4.2 │   13.9 │        1,541 bytes │
-│ religion                    │      4.3 │   13.9 │        1,539 bytes │
-│ education_and_jobs          │      4.5 │   13.9 │        1,516 bytes │
-│ adult_content               │      4.3 │   13.9 │        1,295 bytes │
+│ software                    │  109.307 │ 62.143 │        5,198 bytes │
+│ entertainment               │  103.543 │ 62.143 │        4,874 bytes │
+│ religion                    │  105.842 │ 62.143 │        4,426 bytes │
+│ crime_and_law               │  112.435 │ 62.143 │        4,275 bytes │
+│ finance_and_business        │  114.269 │ 62.143 │        4,217 bytes │
+│ education_and_jobs          │  113.190 │ 62.143 │        3,937 bytes │
+│ health                      │  110.642 │ 62.143 │        3,920 bytes │
+│ games                       │  103.444 │ 62.143 │        3,860 bytes │
+│ transportation              │  108.465 │ 62.143 │        3,766 bytes │
+│ history_and_geography       │  105.861 │ 62.143 │        3,760 bytes │
+│ sports_and_fitness          │  104.302 │ 62.143 │        3,709 bytes │
+│ food_and_dining             │  103.497 │ 62.143 │        3,678 bytes │
+│ literature                  │  104.664 │ 62.143 │        3,306 bytes │
+│ home_and_hobbies            │  107.395 │ 62.143 │        3,268 bytes │
+│ travel_and_tourism          │  106.273 │ 62.143 │        3,175 bytes │
+│ software_development        │  104.737 │ 62.143 │        3,123 bytes │
+│ adult_content               │  105.328 │ 62.143 │        3,089 bytes │
+│ politics                    │  113.064 │ 62.143 │        2,982 bytes │
+│ fashion_and_beauty          │  105.339 │ 62.143 │        2,486 bytes │
+│ science_math_and_technology │  108.772 │ 62.143 │        2,391 bytes │
+│ social_life                 │  103.932 │ 62.143 │        2,069 bytes │
+│ art_and_design              │  108.548 │ 62.143 │        2,035 bytes │
+│ industrial                  │  115.161 │ 62.143 │        1,605 bytes │
+│ electronics_and_hardware    │  105.637 │ 62.143 │        1,012 bytes │
 └─────────────────────────────┴──────────┴────────┴────────────────────┘
 ```
