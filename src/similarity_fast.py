@@ -16,6 +16,9 @@ TRAIN_TOKENS = 50_000_000
 VALIDATION_DOCUMENTS = 50_000
 # VALIDATION_DOCUMENTS = 150_000
 
+# Chunk size for MI computation (in bytes, approx)
+MI_CHUNK_BYTES = int(os.environ.get("MI_CHUNK_BYTES", "5000000"))
+
 
 def _zstd_size(text, level=3):
     """Compress a string using zstd and return the compressed size"""
@@ -35,6 +38,38 @@ def _zstd_concat_size(texts, level=3):
     size = len(compressed)
     print(f"  Zstd concatenation: {original_size:,} bytes → {size:,} bytes (ratio: {size/original_size:.3f})")
     return size
+
+def _compute_chunked_mi(train_text, val_text, cx_val, level):
+    """Compute MI between val_text and train_text by summing over chunks of train_text.
+
+    Returns (mi_bytes, ntrain_bytes).
+    """
+    # Build chunks of approximately MI_CHUNK_BYTES by character slicing
+    # Approximate byte-to-char by assuming ~1 byte per char; exact size is computed per chunk
+    approx_chars_per_chunk = MI_CHUNK_BYTES
+    num_chars = len(train_text)
+    if num_chars == 0:
+        return 0, 0
+    mi_sum = 0
+    bytes_sum = 0
+    for start in range(0, num_chars, approx_chars_per_chunk):
+        chunk = train_text[start:start + approx_chars_per_chunk]
+        chunk_bytes = len(chunk.encode('utf-8'))
+        if chunk_bytes == 0:
+            continue
+        cy = _zstd_size(chunk, level)
+        cxy = _zstd_concat_size([val_text, chunk], level)
+        cyx = _zstd_concat_size([chunk, val_text], level)
+        mi1 = cx_val + cy - cxy
+        mi2 = cx_val + cy - cyx
+        mi_chunk = (mi1 + mi2) // 2
+        # Sum MI across chunks (MI is additive)
+        mi_sum += mi_chunk
+        bytes_sum += chunk_bytes
+    if bytes_sum == 0:
+        return 0, 0
+    # Return total MI across all chunks
+    return mi_sum, bytes_sum
 
 def get_dirs(path):
     return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
@@ -101,7 +136,7 @@ def build_strings_from_tokens(token_file_path, max_tokens=None):
     return "".join(chunk_texts)
 
 def process_subset_with_text(args):
-    """Process subset using pre-processed text"""
+    """Process subset using pre-processed text, using chunked MI to avoid large-text bias"""
     subset, train_text, val_text, cx_val, level = args
     
     print(f"\nProcessing subset: {subset}")
@@ -109,22 +144,11 @@ def process_subset_with_text(args):
     print(f"  Val text size: {len(val_text.encode('utf-8')):,} bytes")
     print(f"  Val compressed size (cx_val): {cx_val:,} bytes")
     
-    cy = _zstd_size(train_text, level)
+    # Compute chunked MI
+    mi, ntrain_bytes = _compute_chunked_mi(train_text, val_text, cx_val, level)
+    print(f"  Final MI (chunked): {mi:,} bytes over {ntrain_bytes:,} train bytes")
     
-    # Calculate compressed sizes of concatenations
-    cxy = _zstd_concat_size([val_text, train_text], level)
-    cyx = _zstd_concat_size([train_text, val_text], level)
-    
-    # Calculate mutual information: I(X;Y) = H(X) + H(Y) - H(X,Y)
-    mi1 = cx_val + cy - cxy
-    mi2 = cx_val + cy - cyx
-    mi = (mi1 + mi2) // 2
-    
-    print(f"  MI calculation: {cx_val:,} + {cy:,} - {cxy:,} = {mi1:,}")
-    print(f"  MI calculation: {cx_val:,} + {cy:,} - {cyx:,} = {mi2:,}")
-    print(f"  Final MI: {mi:,} bytes")
-    
-    return subset, len(train_text.encode('utf-8')), mi
+    return subset, ntrain_bytes, mi
 
 def process_token_file(args):
     """Process a single token file to extract text"""
